@@ -1,12 +1,19 @@
-import mysql.connector
+import sqlite3
+import os
 
-conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="pxt49@NT",
-    database="maintenance_system"
-)
-
+# 1. Connect to an automatically managed local database file
+DB_FILE = "maintenance_system.db"
+conn = sqlite3.connect(DB_FILE, check_same_thread=False)
 cursor = conn.cursor()
 
-print("Connected Successfully")
+# 2. Automatically build the tables if they don't exist yet
+# This reads your schema.sql.txt file to set up the database
+if os.path.exists("schema.sql.txt"):
+    with open("schema.sql.txt", "r") as f:
+        schema_sql = f.read()
+    try:
+        cursor.executescript(schema_sql)
+        conn.commit()
+    except Exception as e:
+        # Tables might already exist, which is fine
+        pass
