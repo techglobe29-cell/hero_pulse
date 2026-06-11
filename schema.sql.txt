@@ -1,0 +1,93 @@
+CREATE DATABASE maintenance_system;
+use maintenance_system;
+
+ CREATE TABLE Department(
+    -> Department_ID INT AUTO_INCREMENT PRIMARY KEY,
+    -> Department_Name VARCHAR(100) NOT NULL,
+    -> Location VARCHAR(100)
+    -> );
+
+ CREATE TABLE Equipment(
+    -> Equipment_ID INT AUTO_INCREMENT PRIMARY KEY,
+    -> Equipment_Name VARCHAR(100) NOT NULL,
+    -> Equipment_Type VARCHAR(50),
+    -> Manufacturer VARCHAR(100),
+    -> Model_Number VARCHAR(50),
+    -> Serial_Number VARCHAR(100),
+    -> Installation_Date DATE,
+    -> Purchase_Date DATE,
+    -> Department_ID INT,
+    -> Status VARCHAR(20),
+    ->
+    -> FOREIGN KEY(Department_ID)
+    ->          REFERENCES Department(Department_ID)
+    -> );
+CREATE TABLE Technician(
+    -> Technician_ID INT AUTO_INCREMENT PRIMARY KEY,
+    -> Technician_Name VARCHAR(100) NOT NULL,
+    -> Phone VARCHAR(15),
+    -> Email VARCHAR(100),
+    -> Skill_Level VARCHAR(20)
+    -> );
+
+CREATE TABLE Failure_Reason(
+    -> Failure_ID INT AUTO_INCREMENT PRIMARY KEY,
+    -> Failure_Category VARCHAR(100) NOT NULL,
+    -> Description TEXT
+    -> );
+
+CREATE TABLE Corrective_Action(
+    -> Action_ID INT AUTO_INCREMENT PRIMARY KEY,
+    -> Action_Name VARCHAR(100) NOT NULL,
+    -> Description TEXT
+    -> );
+
+CREATE TABLE Spare_Parts(
+    -> Part_ID INT AUTO_INCREMENT PRIMARY KEY,
+    -> Part_Name VARCHAR(100) NOT NULL,
+    -> Stock_Quantity INT DEFAULT 0,
+    -> Unit_Cost DECIMAL(10,2),
+    -> Vendor VARCHAR(100)
+    -> );
+
+ CREATE TABLE Maintenance (
+    -> Maintenance_ID INT AUTO_INCREMENT PRIMARY KEY,
+    -> Equipment_ID INT NOT NULL,
+    -> Technician_ID INT NOT NULL,
+    -> Maintenance_Type VARCHAR(50),
+    -> Scheduled_Date DATE,
+    -> Completion_Date DATE,
+    -> Status VARCHAR(20),
+    -> Remarks TEXT,
+    -> FOREIGN KEY (Equipment_ID)
+    ->          REFERENCES Equipment(Equipment_ID),
+    ->  FOREIGN KEY (Technician_ID)
+    ->          REFERENCES Technician(TECHNICIAN_ID)
+    -> );
+
+CREATE TABLE Downtime(
+    -> Downtime_ID INT AUTO_INCREMENT PRIMARY KEY,
+    -> Equipment_ID INT NOT NULL,
+    -> Start_Time DATETIME NOT NULL,
+    -> End_Time DATETIME NOT NULL,
+    -> Duration_Hours DECIMAL(10,2),
+    -> Failure_ID INT NOT NULL,
+    -> Action_ID INT NOT NULL,
+    -> FOREIGN KEY (Equipment_ID)
+    ->          REFERENCES Equipment(Equipment_ID),
+    -> FOREIGN KEY (Failure_ID)
+    ->          REFERENCES Failure_Reason(Failure_ID),
+    -> FOREIGN KEY (Action_ID)
+    ->          REFERENCES Corrective_Action(Action_ID)
+    -> );
+
+ CREATE TABLE Maintenance_Spare_Parts(
+    -> Maintenance_ID INT,
+    -> Part_ID INT,
+    -> Quantity_Used INT NOT NULL,
+    -> PRIMARY KEY(Maintenance_ID, Part_ID),
+    -> FOREIGN KEY(Maintenance_ID)
+    ->          REFERENCES Maintenance(Maintenance_ID),
+    -> FOREIGN KEY(Part_ID)
+    ->          REFERENCES Spare_Parts(Part_ID)
+    -> );
