@@ -2,9 +2,10 @@ from database import conn, cursor
 
 def add_failure_reason(category, description):
     sql = """
-    INSERT INTO Failure_Reason (Failure_Category, Description)
-    VALUES (%s, %s)
+    INSERT INTO Failure_Reason (Failure_Category, Description) 
+    VALUES (?, ?)
     """
+    # Changed %s to ? for SQLite
     cursor.execute(sql, (category, description))
     conn.commit()
 
