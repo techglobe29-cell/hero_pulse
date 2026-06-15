@@ -1,13 +1,27 @@
+# 1. ALWAYS put your imports at the very top of the file!
+from database import conn, cursor
+
+# 2. Define your setup function
 def init_db():
-    # This ensures the table exists before you try to pull data from it!
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Department (
-        Department_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        Department_Name TEXT NOT NULL,
-        Location TEXT
+    CREATE TABLE IF NOT EXISTS Equipment (
+        Equipment_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        Equipment_Name TEXT NOT NULL,
+        Equipment_Type TEXT,
+        Manufacturer TEXT,
+        Model_Number TEXT,
+        Serial_Number TEXT,
+        Installation_Date TEXT,
+        Purchase_Date TEXT,
+        Department_ID INTEGER,
+        Status TEXT
     )
     """)
     conn.commit()
 
-# Call this immediately after connecting to your database
+# 3. Run the setup function
 init_db()
+
+# 4. The rest of your functions go below...
+def add_equipment(...):
+    # ... your existing code ...
