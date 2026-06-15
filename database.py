@@ -1,13 +1,9 @@
 import sqlite3
 
-# 1. Connect to a BRAND NEW database file to bypass Streamlit's memory cache
 conn = sqlite3.connect('hero_pulse_v2.db', check_same_thread=False)
 cursor = conn.cursor()
 
-# 2. Define the setup function that creates all tables
 def init_db():
-    
-    # 🏢 Department Table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Department (
         Department_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,7 +12,6 @@ def init_db():
     )
     """)
     
-    # ⚙️ Equipment Table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Equipment (
         Equipment_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,7 +27,6 @@ def init_db():
     )
     """)
 
-    # 👷 Technician Table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Technician (
         Technician_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,7 +37,6 @@ def init_db():
     )
     """)
 
-    # ⚠️ Failure Reason Table (Updated with exact column names your app needs)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Failure_Reason (
         Failure_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,7 +45,6 @@ def init_db():
     )
     """)
 
-    # 🛠️ Corrective Action Table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Corrective_Action (
         Action_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,6 +53,29 @@ def init_db():
     )
     """)
 
-    # 🔧 Maintenance Table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Maintenance (
+        Maintenance_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        Equipment_ID INTEGER,
+        Technician_ID INTEGER,
+        Maintenance_Type TEXT,
+        Scheduled_Date TEXT,
+        Status TEXT,
+        Remarks TEXT
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Downtime (
+        Downtime_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        Equipment_ID INTEGER,
+        Start_Time TEXT,
+        End_Time TEXT,
+        Duration REAL,
+        Failure_ID INTEGER,
+        Action_ID INTEGER
+    )
+    """)
+    conn.commit()
+
+init_db()
